@@ -26,6 +26,10 @@ jobs:
           $zipBytes = [Convert]::FromBase64String($b64)
           [IO.File]::WriteAllBytes("Build_0_6_Source.zip", $zipBytes)
           Expand-Archive -Path "Build_0_6_Source.zip" -DestinationPath "source" -Force
+          # Correct JavaFX launcher configuration for Windows EXE.
+          $pom = Get-Content "source/pom.xml" -Raw
+          $pom = $pom -replace '<jre>\s*<path>jre</path>', '<jre><path>jre</path><opt>--module-path "%EXEDIR%\\lib"</opt><opt>--add-modules javafx.controls,javafx.fxml</opt>'
+          Set-Content "source/pom.xml" $pom -Encoding UTF8
 
       - name: Build and test
         working-directory: source
