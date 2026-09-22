@@ -36,8 +36,10 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://api.adoptium.net/v3/binary/latest/11/ga/windows/x64/jre/hotspot/normal/eclipse" -OutFile jre.zip
           Expand-Archive -Path jre.zip -DestinationPath jre-unpacked -Force
-          $jre = Get-ChildItem jre-unpacked -Directory | Select-Object -First 1
-          Rename-Item $jre.FullName jre
+          $jre = Get-ChildItem jre-unpacked -Directory -Recurse | Where-Object { Test-Path (Join-Path $_.FullName "bin\java.exe") } | Select-Object -First 1
+          if (-not $jre) { throw "Bundled JRE directory not found after extraction." }
+          Remove-Item jre -Recurse -Force -ErrorAction SilentlyContinue
+          Copy-Item $jre.FullName jre -Recurse
 
       - name: Assemble portable application
         shell: pwsh
