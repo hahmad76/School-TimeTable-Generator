@@ -47,7 +47,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path package/lib | Out-Null
           Copy-Item "source/target/School_TimeTable_Generator_V1_0_Build_0_6.exe" "package/School_TimeTable_Generator_V1_0_Build_0_6.exe"
           Copy-Item "source/target/school-timetable-generator-1.0.0.jar" "package/school-timetable-generator-1.0.0.jar"
-          & mvn -B -f source/pom.xml dependency:copy-dependencies "-DincludeScope=runtime" "-DoutputDirectory=$PWD/package/lib"
+          Copy-Item "source/target/lib/*" "package/lib" -Force
           Copy-Item "jre" "package/jre" -Recurse
           Copy-Item "source/README.md" "package/README.md"
           Copy-Item "source/BUILD_0_6_RELEASE_NOTE.md" "package/BUILD_0_6_RELEASE_NOTE.md"
