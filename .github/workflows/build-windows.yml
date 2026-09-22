@@ -23,6 +23,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path source | Out-Null
+          $zipBytes = [Convert]::FromBase64String((Get-Content "Build_0_6_Source.zip.b64" -Raw))
+          [IO.File]::WriteAllBytes("Build_0_6_Source.zip", $zipBytes)
           Expand-Archive -Path "Build_0_6_Source.zip" -DestinationPath "source" -Force
 
       - name: Build and test
